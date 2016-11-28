@@ -2,10 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import '../css/Table.css';
 import Sensor from '../model/Sensor';
 import Row from './Row';
-
-// ne fonctionne pas à cause de webpack
 //const mqtt = require('mqtt')
+// ne fonctionne pas à cause de webpack
 const mqtt = require('../../public/mqtt.js')
+
+const RadarChart = require("react-chartjs").Radar;
 
 class Table extends Component {
 
@@ -71,31 +72,73 @@ class Table extends Component {
 
   }
 
+  count(string) {
+    let compteur = 0;
+    for (var i=0; i < this.sensors.length; i++) {
+      if (this.sensors[i].type === string) {
+        compteur++;
+      }
+    }
+    return compteur;
+  }
+
+  getData() {
+    var data = {
+        labels: ["TEMPERATURE","HUMIDITY","LIGHT","SWITCH","DOOR","FAN_SPEED","POSITIVE_NUMBER","PERCENT","ON_OFF","OPEN_CLOSE"],
+        datasets: [
+            {
+                label: "My First dataset",
+                backgroundColor: "rgba(179,181,198,0.2)",
+                borderColor: "rgba(179,181,198,1)",
+                pointBackgroundColor: "rgba(179,181,198,1)",
+                pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: "rgba(179,181,198,1)",
+                data: [ this.count("TEMPERATURE"), this.count("HUMIDITY"), this.count("LIGHT"), this.count("SWITCH"), this.count("DOOR"), this.count("FAN_SPEED"), this.count("POSITIVE_NUMBER"), this.count("PERCENT"), this.count("ON_OFF"), this.count("OPEN_CLOSE")]
+            }
+        ]
+    };
+    return data;
+  }
+
   render() {
 
     let rows = [];
-    const numberOfSensor = this.sensors.length;
-    for (var i=0; i < numberOfSensor; i++) {
+    for (var i=0; i < this.sensors.length; i++) {
       const id = this.sensors[i].id;
       const type = this.sensors[i].type;
       const valueSensor = this.sensors[i].data.value;
       rows.push(<Row id={id} type={type} value={valueSensor} key={i}/>);
     }
 
+    const data = this.getData();
+    const options = {
+            scale: {
+                reverse: true,
+                ticks: {
+                    beginAtZero: true
+                }
+            }
+    }
+
     return (
-      <div className="table-responsive">
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>TYPE</th>
-              <th>VALUE</th>
-            </tr>
-          </thead>
-          <tbody id="table">
-            {rows}
-          </tbody>
-        </table>
+      <div>
+        <RadarChart data={data} options={options} redraw />
+        <div className="table-responsive">
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>TYPE</th>
+                <th>VALUE</th>
+              </tr>
+            </thead>
+            <tbody id="table">
+              {rows}
+            </tbody>
+          </table>
+
+        </div>
       </div>
     );
   }

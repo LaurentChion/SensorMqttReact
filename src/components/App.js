@@ -13,9 +13,7 @@ class App extends Component {
         <div className="row">
             <div className="col-sm-12 main">
                 <h1 className="page-header"><img src={logo} className="App-logo" alt="logo" />Sensors List</h1>
-                <div className="table-responsive">
                   <Table update={this.props.update} />
-                </div>
             </div>
         </div>
     );

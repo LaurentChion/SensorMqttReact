@@ -31,9 +31,11 @@ export default class Sensor {
   static idIsValid(id) {
     const tab = Sensor.getTab();
     if (tab.includes(id)) {
-      throw Error('Id is already use');
+      return false;
+      //throw Error('Id is already use');
     } else {
       tab.push(id);
+      return true;
     }
   }
   constructor(id, name, type, data) {

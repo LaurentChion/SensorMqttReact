@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import logo from '../logo.svg';
-import '../css/App.css';
+import React, { Component, PropTypes } from 'react';
 import Table from './Table';
 
 
 class App extends Component {
+  static propTypes = {
+    update: PropTypes.func.isRequired
+  }
+
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+        <div className="row">
+            <div className="col-sm-12 main">
+                <h2 className="sub-header">Sensors List</h2>
+                <div className="table-responsive">
+                  <Table update={this.props.update} />
+                </div>
+            </div>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <Table />
-      </div>
     );
   }
 }
